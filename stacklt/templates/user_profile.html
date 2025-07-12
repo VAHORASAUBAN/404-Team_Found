@@ -51,9 +51,11 @@
                     <div class="relative">
                         <button class="flex items-center space-x-2 text-text-secondary hover:text-text-primary transition-colors duration-200">
                             {% if user.profile_image %}
-                                <img src="{{ user.profile_image.url }}?v={{ cache_buster }}" alt="{{ user.get_full_name|default:user.username }}" class="w-8 h-8 rounded-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                                <img src="{{ user.profile_image.url }}?v={{ cache_buster }}" alt="{{ user.get_full_name|default:user.username }}" class="w-8 h-8 rounded-full object-cover" />
                             {% else %}
-                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="{{ user.get_full_name|default:user.username }}" class="w-8 h-8 rounded-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                                <div class="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center text-white font-medium text-sm">
+                                    {{ user.full_name.0|default:user.username.0|upper }}
+                                </div>
                             {% endif %}
                             <span class="hidden sm:block font-medium">{{ user.get_full_name|default:user.username }}</span>
                         </button>
@@ -338,9 +340,9 @@
                                                 <span class="text-sm font-medium text-text-primary">{{ activity.action }}</span>
                                                 <span class="text-xs text-text-secondary">{{ activity.time|timesince }} ago</span>
                                             </div>
-                                            <a href="{% url activity.url %}" class="text-primary-600 hover:text-primary-700 transition-colors duration-200">
+                                            {% comment %} <a href="{% url activity.url %}" class="text-primary-600 hover:text-primary-700 transition-colors duration-200">
                                                 {{ activity.title }}
-                                            </a>
+                                            </a> {% endcomment %}
                                             <div class="flex items-center space-x-4 mt-2 text-xs text-text-secondary">
                                                 {% if activity.type == 'question' %}
                                                     <span>{{ activity.answers_count }} answer{{ activity.answers_count|pluralize }}</span>
@@ -539,9 +541,9 @@
                                             <span class="font-medium text-text-primary">{{ activity.action }}</span>
                                             <span class="text-sm text-text-secondary">{{ activity.time|timesince }} ago</span>
                                         </div>
-                                        <a href="{% url activity.url %}" class="text-primary-600 hover:text-primary-700 transition-colors duration-200">
+                                        {% comment %} <a href="{% url activity.url %}" class="text-primary-600 hover:text-primary-700 transition-colors duration-200">
                                             {{ activity.title }}
-                                        </a>
+                                        </a> {% endcomment %}
                                         <div class="text-sm text-text-secondary mt-1">
                                             {% if activity.type == 'answer' %}
                                                 +{{ activity.upvotes|add:"15" }} reputation
@@ -942,6 +944,6 @@
             }
         });
     </script>
-<script id="dhws-dataInjector" src="../public/dhws-data-injector.js"></script>
+
 </body>
 </html>

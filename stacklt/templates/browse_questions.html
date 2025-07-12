@@ -57,7 +57,7 @@
                             <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                                 alt="User Avatar" class="w-8 h-8 rounded-full object-cover"
                                 onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
-                            <span class="hidden md:block text-sm font-medium text-text-primary">Demo User</span>
+                            <span class="hidden md:block text-sm font-medium text-text-primary">{{ user.get_full_name|default:user.username }}</span>
                             <svg class="w-4 h-4 text-text-secondary" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -308,65 +308,76 @@
 
                 <!-- Questions Grid -->
                 <div id="questionsContainer" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
-                    <!-- Question Card 1 -->
-                    <div class="bg-surface rounded-2xl border border-border p-6 hover:shadow-md transition-all duration-200 cursor-pointer"
-                        onclick=`window.location.href="{% url 'question_detail' %}"`>
-                        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-2">
-                            <div class="flex flex-wrap items-center gap-2">
-                                <span class="bg-success-100 text-success-700 text-xs px-2 py-1 rounded-full font-medium">Answered</span>
-                                <span class="bg-primary-100 text-primary-700 text-xs px-2 py-1 rounded-full font-medium">Trust Score: 92</span>
-                            </div>
-                            <div class="flex items-center space-x-1 text-text-secondary mt-2 sm:mt-0">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
-                                </svg>
-                                <span class="text-sm font-medium">24</span>
-                            </div>
-                        </div>
-                        
-                        <h3 class="text-lg font-semibold text-text-primary mb-3 line-clamp-2">
-                            How to implement async/await with error handling in JavaScript?
-                        </h3>
-                        
-                        <p class="text-text-secondary text-sm mb-4 line-clamp-3">
-                            I'm trying to understand the best practices for handling errors when using async/await in JavaScript. Should I use try-catch blocks or handle promises differently?
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">javascript</span>
-                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">async-await</span>
-                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">error-handling</span>
-                        </div>
-                        
-                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm text-text-secondary gap-2">
-                            <div class="flex flex-wrap items-center gap-4">
+                    {% if questions %}
+                        {% for question in questions %}
+                        <!-- Question Card -->
+                        <div class="bg-surface rounded-2xl border border-border p-6 hover:shadow-md transition-all duration-200 cursor-pointer"
+                            onclick="window.location.href='{% url 'question_detail' question.pk %}'">
+                            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-2">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    {% if question.answers.count > 0 %}
+                                        <span class="bg-success-100 text-success-700 text-xs px-2 py-1 rounded-full font-medium">Answered</span>
+                                    {% else %}
+                                        <span class="bg-warning-100 text-warning-700 text-xs px-2 py-1 rounded-full font-medium">Unanswered</span>
+                                    {% endif %}
+                                    <span class="bg-primary-100 text-primary-700 text-xs px-2 py-1 rounded-full font-medium">{{ question.created_at|timesince }} ago</span>
+                                </div>
+                                <div class="flex items-center space-x-1 text-text-secondary mt-2 sm:mt-0">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
                                     </svg>
-                                    <span>5 answers</span>
-                                </span>
-                                <span class="flex items-center space-x-1">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                    </svg>
-                                    <span>234 views</span>
-                                </span>
+                                    <span class="text-sm font-medium">0</span>
+                                </div>
                             </div>
-                            <div class="flex items-center space-x-2">
-                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User" class="w-6 h-6 rounded-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
-                                <span class="text-xs">2 hours ago</span>
+                            
+                            <h3 class="text-lg font-semibold text-text-primary mb-3 line-clamp-2">
+                                {{ question.title }}
+                            </h3>
+                            
+                            <p class="text-text-secondary text-sm mb-4 line-clamp-3">
+                                {{ question.description|striptags|truncatewords:20 }}
+                            </p>
+                            
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                {% for tag in question.tags.all %}
+                                    <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">{{ tag.name }}</span>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm text-text-secondary gap-2">
+                                <div class="flex flex-wrap items-center gap-4">
+                                    <span class="flex items-center space-x-1">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                        </svg>
+                                        <span>{{ question.answers.count }} answer{{ question.answers.count|pluralize }}</span>
+                                    </span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <img src="https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User" class="w-6 h-6 rounded-full object-cover" />
+                                    <span class="text-xs">{{ question.user.get_full_name|default:question.user.username }}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-               
-                  
-
-                    <!-- Question Card 4 -->
-                  
-
-            
+                        {% endfor %}
+                    {% else %}
+                        <!-- No Questions Message -->
+                        <div class="col-span-full text-center py-12">
+                            <svg class="mx-auto h-12 w-12 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <h3 class="mt-2 text-sm font-medium text-text-primary">No questions found</h3>
+                            <p class="mt-1 text-sm text-text-secondary">Be the first to ask a question in this community.</p>
+                            <div class="mt-6">
+                                <a href="{% url 'ask_question' %}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                    </svg>
+                                    Ask Question
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
 
                 <!-- Loading Skeleton -->
