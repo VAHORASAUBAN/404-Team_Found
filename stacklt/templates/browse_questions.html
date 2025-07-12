@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-{% load static %}
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,7 +11,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fstackit4494back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.5"></script>
 </head>
 <body class="bg-background min-h-screen">
     <!-- Header -->
@@ -49,7 +48,7 @@
                             class="text-text-secondary hover:text-text-primary transition-colors duration-200">Home</a>
                         <a href="{% url 'browse_questions' %}"
                             class="text-text-secondary hover:text-text-primary transition-colors duration-200">Questions</a>
-                        <a href="{% url 'ask_question' %} class="text-primary-600 font-medium">Ask</a>
+                        <a href="{% url 'ask_question' %}" class="text-primary-600 font-medium">Ask</a>
                     </nav>
                     <!-- User Profile -->
                     <div class="relative">
@@ -72,7 +71,8 @@
                             <a href="javascript:void(0)"
                                 class="block px-4 py-2 text-sm text-text-primary hover:bg-gray-50 transition-colors duration-200">Settings</a>
                             <hr class="my-2 border-border" />
-                           
+                            <a href="{% url 'logout' %}"
+                                class="block px-4 py-2 text-sm text-error-600 hover:bg-error-50 transition-colors duration-200">Sign Out</a>
                         </div>
                     </div>
                     <!-- Mobile Menu Button -->
@@ -309,13 +309,14 @@
                 <!-- Questions Grid -->
                 <div id="questionsContainer" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
                     <!-- Question Card 1 -->
-                    <div class="bg-surface rounded-2xl border border-border p-6 hover:shadow-md transition-all duration-200 cursor-pointer" onclick="window.location.href='question_detail.html'">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex items-center space-x-2">
+                    <div class="bg-surface rounded-2xl border border-border p-6 hover:shadow-md transition-all duration-200 cursor-pointer"
+                        onclick=`window.location.href="{% url 'question_detail' %}"`>
+                        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-2">
+                            <div class="flex flex-wrap items-center gap-2">
                                 <span class="bg-success-100 text-success-700 text-xs px-2 py-1 rounded-full font-medium">Answered</span>
                                 <span class="bg-primary-100 text-primary-700 text-xs px-2 py-1 rounded-full font-medium">Trust Score: 92</span>
                             </div>
-                            <div class="flex items-center space-x-1 text-text-secondary">
+                            <div class="flex items-center space-x-1 text-text-secondary mt-2 sm:mt-0">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
                                 </svg>
@@ -337,9 +338,8 @@
                             <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">error-handling</span>
                         </div>
                         
-                        <div class="flex items-center justify-between text-sm text-text-secondary">
-                            <div class="flex items-center space-x-4">
-                                <span class="flex items-center space-x-1">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm text-text-secondary gap-2">
+                            <div class="flex flex-wrap items-center gap-4">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                                     </svg>
@@ -360,264 +360,13 @@
                         </div>
                     </div>
 
-                    <!-- Question Card 2 -->
-                    <div class="bg-surface rounded-2xl border border-border p-6 hover:shadow-md transition-all duration-200 cursor-pointer" onclick="window.location.href='question_detail.html'">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex items-center space-x-2">
-                                <span class="bg-warning-100 text-warning-700 text-xs px-2 py-1 rounded-full font-medium">Unanswered</span>
-                                <span class="bg-accent-100 text-accent-700 text-xs px-2 py-1 rounded-full font-medium">AI Suggested</span>
-                            </div>
-                            <div class="flex items-center space-x-1 text-text-secondary">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
-                                </svg>
-                                <span class="text-sm font-medium">12</span>
-                            </div>
-                        </div>
-                        
-                        <h3 class="text-lg font-semibold text-text-primary mb-3 line-clamp-2">
-                            React useEffect cleanup function not working properly
-                        </h3>
-                        
-                        <p class="text-text-secondary text-sm mb-4 line-clamp-3">
-                            I have a useEffect hook that sets up an event listener, but the cleanup function doesn't seem to remove it properly. Memory leaks are occurring in my application.
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">react</span>
-                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">useeffect</span>
-                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">memory-leaks</span>
-                        </div>
-                        
-                        <div class="flex items-center justify-between text-sm text-text-secondary">
-                            <div class="flex items-center space-x-4">
-                                <span class="flex items-center space-x-1">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                                    </svg>
-                                    <span>0 answers</span>
-                                </span>
-                                <span class="flex items-center space-x-1">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                    </svg>
-                                    <span>89 views</span>
-                                </span>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User" class="w-6 h-6 rounded-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
-                                <span class="text-xs">4 hours ago</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Question Card 3 -->
-                    <div class="bg-surface rounded-2xl border border-border p-6 hover:shadow-md transition-all duration-200 cursor-pointer" onclick="window.location.href='question_detail.html'">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex items-center space-x-2">
-                                <span class="bg-success-100 text-success-700 text-xs px-2 py-1 rounded-full font-medium">Answered</span>
-                                <span class="bg-secondary-100 text-secondary-700 text-xs px-2 py-1 rounded-full font-medium">AI Answered</span>
-                            </div>
-                            <div class="flex items-center space-x-1 text-text-secondary">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
-                                </svg>
-                                <span class="text-sm font-medium">8</span>
-                            </div>
-                        </div>
-                        
-                        <h3 class="text-lg font-semibold text-text-primary mb-3 line-clamp-2">
-                            Python list comprehension vs map() performance comparison
-                        </h3>
-                        
-                        <p class="text-text-secondary text-sm mb-4 line-clamp-3">
-                            Which is more efficient for large datasets: list comprehensions or the map() function? I need to process millions of records and want to optimize performance.
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">python</span>
-                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">performance</span>
-                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">list-comprehension</span>
-                        </div>
-                        
-                        <div class="flex items-center justify-between text-sm text-text-secondary">
-                            <div class="flex items-center space-x-4">
-                                <span class="flex items-center space-x-1">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                                    </svg>
-                                    <span>3 answers</span>
-                                </span>
-                                <span class="flex items-center space-x-1">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                    </svg>
-                                    <span>156 views</span>
-                                </span>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User" class="w-6 h-6 rounded-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
-                                <span class="text-xs">6 hours ago</span>
-                            </div>
-                        </div>
-                    </div>
+               
+                  
 
                     <!-- Question Card 4 -->
-                    <div class="bg-surface rounded-2xl border border-border p-6 hover:shadow-md transition-all duration-200 cursor-pointer" onclick="window.location.href='question_detail.html'">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex items-center space-x-2">
-                                <span class="bg-success-100 text-success-700 text-xs px-2 py-1 rounded-full font-medium">Answered</span>
-                                <span class="bg-primary-100 text-primary-700 text-xs px-2 py-1 rounded-full font-medium">Trust Score: 87</span>
-                            </div>
-                            <div class="flex items-center space-x-1 text-text-secondary">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
-                                </svg>
-                                <span class="text-sm font-medium">31</span>
-                            </div>
-                        </div>
-                        
-                        <h3 class="text-lg font-semibold text-text-primary mb-3 line-clamp-2">
-                            CSS Grid vs Flexbox: When to use which layout system?
-                        </h3>
-                        
-                        <p class="text-text-secondary text-sm mb-4 line-clamp-3">
-                            I'm confused about when to use CSS Grid versus Flexbox for layouts. Can someone explain the key differences and provide practical examples of when each is most appropriate?
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">css</span>
-                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">css-grid</span>
-                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">flexbox</span>
-                        </div>
-                        
-                        <div class="flex items-center justify-between text-sm text-text-secondary">
-                            <div class="flex items-center space-x-4">
-                                <span class="flex items-center space-x-1">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                                    </svg>
-                                    <span>7 answers</span>
-                                </span>
-                                <span class="flex items-center space-x-1">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                    </svg>
-                                    <span>412 views</span>
-                                </span>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User" class="w-6 h-6 rounded-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
-                                <span class="text-xs">1 day ago</span>
-                            </div>
-                        </div>
-                    </div>
+                  
 
-                    <!-- Question Card 5 -->
-                    <div class="bg-surface rounded-2xl border border-border p-6 hover:shadow-md transition-all duration-200 cursor-pointer" onclick="window.location.href='question_detail.html'">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex items-center space-x-2">
-                                <span class="bg-warning-100 text-warning-700 text-xs px-2 py-1 rounded-full font-medium">Unanswered</span>
-                            </div>
-                            <div class="flex items-center space-x-1 text-text-secondary">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
-                                </svg>
-                                <span class="text-sm font-medium">5</span>
-                            </div>
-                        </div>
-                        
-                        <h3 class="text-lg font-semibold text-text-primary mb-3 line-clamp-2">
-                            Node.js memory management and garbage collection optimization
-                        </h3>
-                        
-                        <p class="text-text-secondary text-sm mb-4 line-clamp-3">
-                            My Node.js application is experiencing memory leaks and high memory usage. What are the best practices for memory management and how can I optimize garbage collection?
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">nodejs</span>
-                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">memory-management</span>
-                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">garbage-collection</span>
-                        </div>
-                        
-                        <div class="flex items-center justify-between text-sm text-text-secondary">
-                            <div class="flex items-center space-x-4">
-                                <span class="flex items-center space-x-1">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                                    </svg>
-                                    <span>0 answers</span>
-                                </span>
-                                <span class="flex items-center space-x-1">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                    </svg>
-                                    <span>67 views</span>
-                                </span>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User" class="w-6 h-6 rounded-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
-                                <span class="text-xs">1 day ago</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Question Card 6 -->
-                    <div class="bg-surface rounded-2xl border border-border p-6 hover:shadow-md transition-all duration-200 cursor-pointer" onclick="window.location.href='question_detail.html'">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex items-center space-x-2">
-                                <span class="bg-success-100 text-success-700 text-xs px-2 py-1 rounded-full font-medium">Answered</span>
-                                <span class="bg-primary-100 text-primary-700 text-xs px-2 py-1 rounded-full font-medium">Trust Score: 95</span>
-                            </div>
-                            <div class="flex items-center space-x-1 text-text-secondary">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
-                                </svg>
-                                <span class="text-sm font-medium">42</span>
-                            </div>
-                        </div>
-                        
-                        <h3 class="text-lg font-semibold text-text-primary mb-3 line-clamp-2">
-                            Best practices for API design and RESTful endpoints
-                        </h3>
-                        
-                        <p class="text-text-secondary text-sm mb-4 line-clamp-3">
-                            What are the current best practices for designing RESTful APIs? I need guidance on URL structure, HTTP methods, status codes, and error handling patterns.
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">api-design</span>
-                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">rest</span>
-                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">best-practices</span>
-                        </div>
-                        
-                        <div class="flex items-center justify-between text-sm text-text-secondary">
-                            <div class="flex items-center space-x-4">
-                                <span class="flex items-center space-x-1">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                                    </svg>
-                                    <span>12 answers</span>
-                                </span>
-                                <span class="flex items-center space-x-1">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                    </svg>
-                                    <span>789 views</span>
-                                </span>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User" class="w-6 h-6 rounded-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
-                                <span class="text-xs">2 days ago</span>
-                            </div>
-                        </div>
-                    </div>
+            
                 </div>
 
                 <!-- Loading Skeleton -->
