@@ -1,0 +1,1045 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Browse Questions - StackIt</title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fstackit4494back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.5"></script>
+</head>
+<body class="bg-background min-h-screen">
+    <!-- Header -->
+   <header class="bg-surface border-b border-border sticky top-0 z-50 backdrop-blur-sm bg-white/95">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="{% url 'dashboard_home' %}" class="flex items-center space-x-2">
+                        <div
+                            class="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <span class="text-xl font-bold text-text-primary">StackIt</span>
+                    </a>
+                </div>
+                <!-- Search Bar -->
+                <div class="hidden md:flex flex-1 max-w-2xl mx-8">
+                    <div class="relative w-full">
+                        <input type="text" placeholder="Search questions..."
+                            class="w-full pl-10 pr-4 py-2 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200" />
+                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-text-secondary"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                </div>
+                <!-- Navigation & User Menu -->
+                <div class="flex items-center space-x-4">
+                    <nav class="hidden md:flex items-center space-x-6">
+                        <a href="{% url 'dashboard_home' %}"
+                            class="text-text-secondary hover:text-text-primary transition-colors duration-200">Home</a>
+                        <a href="{% url 'browse_questions' %}"
+                            class="text-text-secondary hover:text-text-primary transition-colors duration-200">Questions</a>
+                        <a href="{% url 'ask_question' %} class="text-primary-600 font-medium">Ask</a>
+                    </nav>
+                    <!-- User Profile -->
+                    <div class="relative">
+                        <button onclick="toggleUserMenu()"
+                            class="flex items-center space-x-2 p-2 rounded-2xl hover:bg-gray-50 transition-colors duration-200">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                alt="User Avatar" class="w-8 h-8 rounded-full object-cover"
+                                onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                            <span class="hidden md:block text-sm font-medium text-text-primary">Demo User</span>
+                            <svg class="w-4 h-4 text-text-secondary" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div id="userMenu"
+                            class="hidden absolute right-0 mt-2 w-48 bg-surface rounded-2xl shadow-lg border border-border py-2 z-50">
+                            <a href="{% url 'user_profile' %}"
+                                class="block px-4 py-2 text-sm text-text-primary hover:bg-gray-50 transition-colors duration-200">Profile</a>
+                            <a href="javascript:void(0)"
+                                class="block px-4 py-2 text-sm text-text-primary hover:bg-gray-50 transition-colors duration-200">Settings</a>
+                            <hr class="my-2 border-border" />
+                           
+                        </div>
+                    </div>
+                    <!-- Mobile Menu Button -->
+                    <button onclick="toggleMobileMenu()"
+                        class="md:hidden p-2 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        <svg class="w-6 h-6 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="hidden md:hidden border-t border-border py-4">
+                <div class="space-y-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Search questions..."
+                            class="w-full pl-10 pr-4 py-2 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-text-secondary"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <nav class="space-y-2">
+                        <a href="{% url 'dashboard_home' %}"
+                            class="block py-2 text-text-secondary hover:text-text-primary transition-colors duration-200">Home</a>
+                        <a href="{% url 'browse_questions' %}"
+                            class="block py-2 text-text-secondary hover:text-text-primary transition-colors duration-200">Questions</a>
+                        <a href="{% url 'ask_question' %}" class="block py-2 text-primary-600 font-medium">Ask
+                            Question</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Filter Sidebar (Desktop) -->
+            <aside class="hidden lg:block w-80 flex-shrink-0">
+                <div class="bg-surface rounded-2xl border border-border p-6 sticky top-24">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-lg font-semibold text-text-primary">Filters</h2>
+                        <button onclick="clearAllFilters()" class="text-sm text-primary-600 hover:text-primary-700 transition-colors duration-200">
+                            Clear All
+                        </button>
+                    </div>
+
+                    <!-- Search within results -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-text-primary mb-2">Search Questions</label>
+                        <div class="relative">
+                            <input type="text" id="questionSearch" placeholder="Search in questions..." class="w-full pl-10 pr-4 py-2 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm" />
+                            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Answer Status Filter -->
+                    <div class="mb-6">
+                        <h3 class="text-sm font-medium text-text-primary mb-3">Answer Status</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="w-4 h-4 text-primary-600 border-border rounded focus:ring-primary-500" checked />
+                                <span class="ml-2 text-sm text-text-secondary">All Questions</span>
+                                <span class="ml-auto text-xs text-text-secondary bg-gray-100 px-2 py-1 rounded-full">1,247</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="w-4 h-4 text-primary-600 border-border rounded focus:ring-primary-500" />
+                                <span class="ml-2 text-sm text-text-secondary">Answered</span>
+                                <span class="ml-auto text-xs text-text-secondary bg-gray-100 px-2 py-1 rounded-full">892</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="w-4 h-4 text-primary-600 border-border rounded focus:ring-primary-500" />
+                                <span class="ml-2 text-sm text-text-secondary">Unanswered</span>
+                                <span class="ml-auto text-xs text-text-secondary bg-gray-100 px-2 py-1 rounded-full">355</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="w-4 h-4 text-primary-600 border-border rounded focus:ring-primary-500" />
+                                <span class="ml-2 text-sm text-text-secondary">AI Answered</span>
+                                <span class="ml-auto text-xs text-text-secondary bg-gray-100 px-2 py-1 rounded-full">156</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Popular Tags -->
+                    <div class="mb-6">
+                        <h3 class="text-sm font-medium text-text-primary mb-3">Popular Tags</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="toggleTag('javascript')" class="px-3 py-1 text-xs bg-gray-100 text-text-secondary rounded-full hover:bg-primary-100 hover:text-primary-700 transition-colors duration-200">
+                                javascript <span class="ml-1 text-xs">324</span>
+                            </button>
+                            <button onclick="toggleTag('react')" class="px-3 py-1 text-xs bg-gray-100 text-text-secondary rounded-full hover:bg-primary-100 hover:text-primary-700 transition-colors duration-200">
+                                react <span class="ml-1 text-xs">298</span>
+                            </button>
+                            <button onclick="toggleTag('python')" class="px-3 py-1 text-xs bg-gray-100 text-text-secondary rounded-full hover:bg-primary-100 hover:text-primary-700 transition-colors duration-200">
+                                python <span class="ml-1 text-xs">267</span>
+                            </button>
+                            <button onclick="toggleTag('nodejs')" class="px-3 py-1 text-xs bg-gray-100 text-text-secondary rounded-full hover:bg-primary-100 hover:text-primary-700 transition-colors duration-200">
+                                nodejs <span class="ml-1 text-xs">189</span>
+                            </button>
+                            <button onclick="toggleTag('css')" class="px-3 py-1 text-xs bg-gray-100 text-text-secondary rounded-full hover:bg-primary-100 hover:text-primary-700 transition-colors duration-200">
+                                css <span class="ml-1 text-xs">156</span>
+                            </button>
+                            <button onclick="toggleTag('html')" class="px-3 py-1 text-xs bg-gray-100 text-text-secondary rounded-full hover:bg-primary-100 hover:text-primary-700 transition-colors duration-200">
+                                html <span class="ml-1 text-xs">134</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Difficulty Level -->
+                    <div class="mb-6">
+                        <h3 class="text-sm font-medium text-text-primary mb-3">Difficulty Level</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="w-4 h-4 text-primary-600 border-border rounded focus:ring-primary-500" />
+                                <span class="ml-2 text-sm text-text-secondary">Beginner</span>
+                                <span class="ml-auto text-xs text-success-600 bg-success-50 px-2 py-1 rounded-full">●</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="w-4 h-4 text-primary-600 border-border rounded focus:ring-primary-500" />
+                                <span class="ml-2 text-sm text-text-secondary">Intermediate</span>
+                                <span class="ml-auto text-xs text-warning-600 bg-warning-50 px-2 py-1 rounded-full">●</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="w-4 h-4 text-primary-600 border-border rounded focus:ring-primary-500" />
+                                <span class="ml-2 text-sm text-text-secondary">Advanced</span>
+                                <span class="ml-auto text-xs text-error-600 bg-error-50 px-2 py-1 rounded-full">●</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Date Range -->
+                    <div>
+                        <h3 class="text-sm font-medium text-text-primary mb-3">Date Range</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="radio" name="dateRange" class="w-4 h-4 text-primary-600 border-border focus:ring-primary-500" checked />
+                                <span class="ml-2 text-sm text-text-secondary">All Time</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="dateRange" class="w-4 h-4 text-primary-600 border-border focus:ring-primary-500" />
+                                <span class="ml-2 text-sm text-text-secondary">Today</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="dateRange" class="w-4 h-4 text-primary-600 border-border focus:ring-primary-500" />
+                                <span class="ml-2 text-sm text-text-secondary">This Week</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="dateRange" class="w-4 h-4 text-primary-600 border-border focus:ring-primary-500" />
+                                <span class="ml-2 text-sm text-text-secondary">This Month</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <div class="flex-1">
+                <!-- Mobile Filter Button -->
+                <div class="lg:hidden mb-6">
+                    <button onclick="toggleMobileFilters()" class="flex items-center space-x-2 px-4 py-2 border border-border rounded-2xl hover:bg-gray-50 transition-colors duration-200">
+                        <svg class="w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+                        </svg>
+                        <span class="text-sm text-text-primary">Filters</span>
+                        <span id="activeFiltersCount" class="hidden bg-primary-600 text-white text-xs px-2 py-1 rounded-full">3</span>
+                    </button>
+                </div>
+
+                <!-- Active Filters -->
+                <div id="activeFilters" class="mb-6">
+                    <div class="flex flex-wrap gap-2">
+                        <div class="flex items-center space-x-2 bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-sm">
+                            <span>javascript</span>
+                            <button onclick="removeFilter('javascript')" class="hover:bg-primary-200 rounded-full p-1 transition-colors duration-200">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="flex items-center space-x-2 bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-sm">
+                            <span>Unanswered</span>
+                            <button onclick="removeFilter('unanswered')" class="hover:bg-primary-200 rounded-full p-1 transition-colors duration-200">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sort and Results Header -->
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+                    <div class="flex items-center space-x-4">
+                        <h1 class="text-2xl font-bold text-text-primary">Browse Questions</h1>
+                        <span class="text-sm text-text-secondary bg-gray-100 px-3 py-1 rounded-full">1,247 results</span>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <!-- Sort Dropdown -->
+                        <div class="relative">
+                            <select id="sortSelect" class="appearance-none bg-surface border border-border rounded-2xl px-4 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                <option value="newest">Newest</option>
+                                <option value="trending">Trending</option>
+                                <option value="most-answered">Most Answered</option>
+                                <option value="unanswered">Unanswered</option>
+                                <option value="votes">Most Votes</option>
+                            </select>
+                            <svg class="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-secondary pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </div>
+
+                        <!-- View Toggle -->
+                        <div class="flex items-center bg-gray-100 rounded-2xl p-1">
+                            <button onclick="setView('grid')" id="gridViewBtn" class="p-2 rounded-xl bg-white shadow-sm transition-all duration-200">
+                                <svg class="w-4 h-4 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                                </svg>
+                            </button>
+                            <button onclick="setView('list')" id="listViewBtn" class="p-2 rounded-xl transition-all duration-200">
+                                <svg class="w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questions Grid -->
+                <div id="questionsContainer" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+                    <!-- Question Card 1 -->
+                    <div class="bg-surface rounded-2xl border border-border p-6 hover:shadow-md transition-all duration-200 cursor-pointer" onclick="window.location.href='question_detail.html'">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-success-100 text-success-700 text-xs px-2 py-1 rounded-full font-medium">Answered</span>
+                                <span class="bg-primary-100 text-primary-700 text-xs px-2 py-1 rounded-full font-medium">Trust Score: 92</span>
+                            </div>
+                            <div class="flex items-center space-x-1 text-text-secondary">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
+                                </svg>
+                                <span class="text-sm font-medium">24</span>
+                            </div>
+                        </div>
+                        
+                        <h3 class="text-lg font-semibold text-text-primary mb-3 line-clamp-2">
+                            How to implement async/await with error handling in JavaScript?
+                        </h3>
+                        
+                        <p class="text-text-secondary text-sm mb-4 line-clamp-3">
+                            I'm trying to understand the best practices for handling errors when using async/await in JavaScript. Should I use try-catch blocks or handle promises differently?
+                        </p>
+                        
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">javascript</span>
+                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">async-await</span>
+                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">error-handling</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between text-sm text-text-secondary">
+                            <div class="flex items-center space-x-4">
+                                <span class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                    </svg>
+                                    <span>5 answers</span>
+                                </span>
+                                <span class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                    <span>234 views</span>
+                                </span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User" class="w-6 h-6 rounded-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                                <span class="text-xs">2 hours ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question Card 2 -->
+                    <div class="bg-surface rounded-2xl border border-border p-6 hover:shadow-md transition-all duration-200 cursor-pointer" onclick="window.location.href='question_detail.html'">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-warning-100 text-warning-700 text-xs px-2 py-1 rounded-full font-medium">Unanswered</span>
+                                <span class="bg-accent-100 text-accent-700 text-xs px-2 py-1 rounded-full font-medium">AI Suggested</span>
+                            </div>
+                            <div class="flex items-center space-x-1 text-text-secondary">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
+                                </svg>
+                                <span class="text-sm font-medium">12</span>
+                            </div>
+                        </div>
+                        
+                        <h3 class="text-lg font-semibold text-text-primary mb-3 line-clamp-2">
+                            React useEffect cleanup function not working properly
+                        </h3>
+                        
+                        <p class="text-text-secondary text-sm mb-4 line-clamp-3">
+                            I have a useEffect hook that sets up an event listener, but the cleanup function doesn't seem to remove it properly. Memory leaks are occurring in my application.
+                        </p>
+                        
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">react</span>
+                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">useeffect</span>
+                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">memory-leaks</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between text-sm text-text-secondary">
+                            <div class="flex items-center space-x-4">
+                                <span class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                    </svg>
+                                    <span>0 answers</span>
+                                </span>
+                                <span class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                    <span>89 views</span>
+                                </span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User" class="w-6 h-6 rounded-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                                <span class="text-xs">4 hours ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question Card 3 -->
+                    <div class="bg-surface rounded-2xl border border-border p-6 hover:shadow-md transition-all duration-200 cursor-pointer" onclick="window.location.href='question_detail.html'">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-success-100 text-success-700 text-xs px-2 py-1 rounded-full font-medium">Answered</span>
+                                <span class="bg-secondary-100 text-secondary-700 text-xs px-2 py-1 rounded-full font-medium">AI Answered</span>
+                            </div>
+                            <div class="flex items-center space-x-1 text-text-secondary">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
+                                </svg>
+                                <span class="text-sm font-medium">8</span>
+                            </div>
+                        </div>
+                        
+                        <h3 class="text-lg font-semibold text-text-primary mb-3 line-clamp-2">
+                            Python list comprehension vs map() performance comparison
+                        </h3>
+                        
+                        <p class="text-text-secondary text-sm mb-4 line-clamp-3">
+                            Which is more efficient for large datasets: list comprehensions or the map() function? I need to process millions of records and want to optimize performance.
+                        </p>
+                        
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">python</span>
+                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">performance</span>
+                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">list-comprehension</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between text-sm text-text-secondary">
+                            <div class="flex items-center space-x-4">
+                                <span class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                    </svg>
+                                    <span>3 answers</span>
+                                </span>
+                                <span class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                    <span>156 views</span>
+                                </span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User" class="w-6 h-6 rounded-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                                <span class="text-xs">6 hours ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question Card 4 -->
+                    <div class="bg-surface rounded-2xl border border-border p-6 hover:shadow-md transition-all duration-200 cursor-pointer" onclick="window.location.href='question_detail.html'">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-success-100 text-success-700 text-xs px-2 py-1 rounded-full font-medium">Answered</span>
+                                <span class="bg-primary-100 text-primary-700 text-xs px-2 py-1 rounded-full font-medium">Trust Score: 87</span>
+                            </div>
+                            <div class="flex items-center space-x-1 text-text-secondary">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
+                                </svg>
+                                <span class="text-sm font-medium">31</span>
+                            </div>
+                        </div>
+                        
+                        <h3 class="text-lg font-semibold text-text-primary mb-3 line-clamp-2">
+                            CSS Grid vs Flexbox: When to use which layout system?
+                        </h3>
+                        
+                        <p class="text-text-secondary text-sm mb-4 line-clamp-3">
+                            I'm confused about when to use CSS Grid versus Flexbox for layouts. Can someone explain the key differences and provide practical examples of when each is most appropriate?
+                        </p>
+                        
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">css</span>
+                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">css-grid</span>
+                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">flexbox</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between text-sm text-text-secondary">
+                            <div class="flex items-center space-x-4">
+                                <span class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                    </svg>
+                                    <span>7 answers</span>
+                                </span>
+                                <span class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                    <span>412 views</span>
+                                </span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User" class="w-6 h-6 rounded-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                                <span class="text-xs">1 day ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question Card 5 -->
+                    <div class="bg-surface rounded-2xl border border-border p-6 hover:shadow-md transition-all duration-200 cursor-pointer" onclick="window.location.href='question_detail.html'">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-warning-100 text-warning-700 text-xs px-2 py-1 rounded-full font-medium">Unanswered</span>
+                            </div>
+                            <div class="flex items-center space-x-1 text-text-secondary">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
+                                </svg>
+                                <span class="text-sm font-medium">5</span>
+                            </div>
+                        </div>
+                        
+                        <h3 class="text-lg font-semibold text-text-primary mb-3 line-clamp-2">
+                            Node.js memory management and garbage collection optimization
+                        </h3>
+                        
+                        <p class="text-text-secondary text-sm mb-4 line-clamp-3">
+                            My Node.js application is experiencing memory leaks and high memory usage. What are the best practices for memory management and how can I optimize garbage collection?
+                        </p>
+                        
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">nodejs</span>
+                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">memory-management</span>
+                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">garbage-collection</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between text-sm text-text-secondary">
+                            <div class="flex items-center space-x-4">
+                                <span class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                    </svg>
+                                    <span>0 answers</span>
+                                </span>
+                                <span class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                    <span>67 views</span>
+                                </span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User" class="w-6 h-6 rounded-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                                <span class="text-xs">1 day ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question Card 6 -->
+                    <div class="bg-surface rounded-2xl border border-border p-6 hover:shadow-md transition-all duration-200 cursor-pointer" onclick="window.location.href='question_detail.html'">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-success-100 text-success-700 text-xs px-2 py-1 rounded-full font-medium">Answered</span>
+                                <span class="bg-primary-100 text-primary-700 text-xs px-2 py-1 rounded-full font-medium">Trust Score: 95</span>
+                            </div>
+                            <div class="flex items-center space-x-1 text-text-secondary">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
+                                </svg>
+                                <span class="text-sm font-medium">42</span>
+                            </div>
+                        </div>
+                        
+                        <h3 class="text-lg font-semibold text-text-primary mb-3 line-clamp-2">
+                            Best practices for API design and RESTful endpoints
+                        </h3>
+                        
+                        <p class="text-text-secondary text-sm mb-4 line-clamp-3">
+                            What are the current best practices for designing RESTful APIs? I need guidance on URL structure, HTTP methods, status codes, and error handling patterns.
+                        </p>
+                        
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">api-design</span>
+                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">rest</span>
+                            <span class="bg-gray-100 text-text-secondary text-xs px-2 py-1 rounded-full">best-practices</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between text-sm text-text-secondary">
+                            <div class="flex items-center space-x-4">
+                                <span class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                    </svg>
+                                    <span>12 answers</span>
+                                </span>
+                                <span class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                    <span>789 views</span>
+                                </span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User" class="w-6 h-6 rounded-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                                <span class="text-xs">2 days ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading Skeleton -->
+                <div id="loadingSkeleton" class="hidden grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-surface rounded-2xl border border-border p-6">
+                        <div class="animate-pulse">
+                            <div class="flex items-center space-x-2 mb-4">
+                                <div class="h-6 bg-gray-200 rounded-full w-20"></div>
+                                <div class="h-6 bg-gray-200 rounded-full w-24"></div>
+                            </div>
+                            <div class="h-6 bg-gray-200 rounded mb-3"></div>
+                            <div class="h-4 bg-gray-200 rounded mb-2"></div>
+                            <div class="h-4 bg-gray-200 rounded mb-4 w-3/4"></div>
+                            <div class="flex space-x-2 mb-4">
+                                <div class="h-6 bg-gray-200 rounded-full w-16"></div>
+                                <div class="h-6 bg-gray-200 rounded-full w-20"></div>
+                            </div>
+                            <div class="flex justify-between">
+                                <div class="h-4 bg-gray-200 rounded w-24"></div>
+                                <div class="h-4 bg-gray-200 rounded w-16"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Load More Button -->
+                <div class="text-center">
+                    <button onclick="loadMoreQuestions()" class="bg-primary-600 text-white px-6 py-3 rounded-2xl font-medium hover:bg-primary-700 transition-all duration-200 hover:shadow-lg hover:shadow-primary-500/25">
+                        Load More Questions
+                    </button>
+                </div>
+
+                <!-- Pagination (Alternative to Load More) -->
+                <div class="hidden mt-8 flex items-center justify-center space-x-2">
+                    <button class="px-3 py-2 border border-border rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                    </button>
+                    <button class="px-4 py-2 bg-primary-600 text-white rounded-lg">1</button>
+                    <button class="px-4 py-2 border border-border rounded-lg hover:bg-gray-50 transition-colors duration-200">2</button>
+                    <button class="px-4 py-2 border border-border rounded-lg hover:bg-gray-50 transition-colors duration-200">3</button>
+                    <span class="px-2 text-text-secondary">...</span>
+                    <button class="px-4 py-2 border border-border rounded-lg hover:bg-gray-50 transition-colors duration-200">42</button>
+                    <button class="px-3 py-2 border border-border rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Filter Overlay -->
+    <div id="mobileFilterOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 lg:hidden">
+        <div class="fixed inset-y-0 left-0 w-80 bg-surface shadow-xl transform transition-transform duration-300 translate-x-0">
+            <div class="flex items-center justify-between p-6 border-b border-border">
+                <h2 class="text-lg font-semibold text-text-primary">Filters</h2>
+                <button onclick="toggleMobileFilters()" class="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                    <svg class="w-6 h-6 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto h-full pb-20">
+                <!-- Mobile filter content (same as desktop sidebar) -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-text-primary mb-2">Search Questions</label>
+                    <div class="relative">
+                        <input type="text" placeholder="Search in questions..." class="w-full pl-10 pr-4 py-2 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm" />
+                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Answer Status Filter -->
+                <div class="mb-6">
+                    <h3 class="text-sm font-medium text-text-primary mb-3">Answer Status</h3>
+                    <div class="space-y-2">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="w-4 h-4 text-primary-600 border-border rounded focus:ring-primary-500" checked />
+                            <span class="ml-2 text-sm text-text-secondary">All Questions</span>
+                            <span class="ml-auto text-xs text-text-secondary bg-gray-100 px-2 py-1 rounded-full">1,247</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="w-4 h-4 text-primary-600 border-border rounded focus:ring-primary-500" />
+                            <span class="ml-2 text-sm text-text-secondary">Answered</span>
+                            <span class="ml-auto text-xs text-text-secondary bg-gray-100 px-2 py-1 rounded-full">892</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="w-4 h-4 text-primary-600 border-border rounded focus:ring-primary-500" />
+                            <span class="ml-2 text-sm text-text-secondary">Unanswered</span>
+                            <span class="ml-auto text-xs text-text-secondary bg-gray-100 px-2 py-1 rounded-full">355</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Popular Tags -->
+                <div class="mb-6">
+                    <h3 class="text-sm font-medium text-text-primary mb-3">Popular Tags</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="px-3 py-1 text-xs bg-gray-100 text-text-secondary rounded-full hover:bg-primary-100 hover:text-primary-700 transition-colors duration-200">
+                            javascript <span class="ml-1 text-xs">324</span>
+                        </button>
+                        <button class="px-3 py-1 text-xs bg-gray-100 text-text-secondary rounded-full hover:bg-primary-100 hover:text-primary-700 transition-colors duration-200">
+                            react <span class="ml-1 text-xs">298</span>
+                        </button>
+                        <button class="px-3 py-1 text-xs bg-gray-100 text-text-secondary rounded-full hover:bg-primary-100 hover:text-primary-700 transition-colors duration-200">
+                            python <span class="ml-1 text-xs">267</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="absolute bottom-0 left-0 right-0 p-6 bg-surface border-t border-border">
+                <div class="flex space-x-3">
+                    <button onclick="clearAllFilters()" class="flex-1 px-4 py-2 border border-border rounded-2xl text-text-primary hover:bg-gray-50 transition-colors duration-200">
+                        Clear All
+                    </button>
+                    <button onclick="applyFilters()" class="flex-1 px-4 py-2 bg-primary-600 text-white rounded-2xl hover:bg-primary-700 transition-colors duration-200">
+                        Apply Filters
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-surface border-t border-border mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <span class="text-xl font-bold text-text-primary">StackIt</span>
+                    </div>
+                    <p class="text-text-secondary text-sm mb-4">
+                        AI-powered Q&A platform for developers. Get instant answers, share knowledge, and build your reputation in the tech community.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="javascript:void(0)" class="text-text-secondary hover:text-primary-600 transition-colors duration-200">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd"/>
+                            </svg>
+                        </a>
+                        <a href="javascript:void(0)" class="text-text-secondary hover:text-primary-600 transition-colors duration-200">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-sm font-semibold text-text-primary mb-4">Platform</h3>
+                    <ul class="space-y-2">
+                        <li><a href="browse_questions.html" class="text-sm text-text-secondary hover:text-primary-600 transition-colors duration-200">Browse Questions</a></li>
+                        <li><a href="ask_question.html" class="text-sm text-text-secondary hover:text-primary-600 transition-colors duration-200">Ask Question</a></li>
+                        <li><a href="javascript:void(0)" class="text-sm text-text-secondary hover:text-primary-600 transition-colors duration-200">Tags</a></li>
+                        <li><a href="javascript:void(0)" class="text-sm text-text-secondary hover:text-primary-600 transition-colors duration-200">Users</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support -->
+                <div>
+                    <h3 class="text-sm font-semibold text-text-primary mb-4">Support</h3>
+                    <ul class="space-y-2">
+                        <li><a href="javascript:void(0)" class="text-sm text-text-secondary hover:text-primary-600 transition-colors duration-200">Help Center</a></li>
+                        <li><a href="javascript:void(0)" class="text-sm text-text-secondary hover:text-primary-600 transition-colors duration-200">Contact Us</a></li>
+                        <li><a href="javascript:void(0)" class="text-sm text-text-secondary hover:text-primary-600 transition-colors duration-200">Privacy Policy</a></li>
+                        <li><a href="javascript:void(0)" class="text-sm text-text-secondary hover:text-primary-600 transition-colors duration-200">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-border mt-8 pt-8 text-center">
+                <p class="text-sm text-text-secondary">
+                    © 2025 StackIt. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Global variables
+        let currentView = 'grid';
+        let currentSort = 'newest';
+        let activeFilters = ['javascript', 'unanswered'];
+        let isLoading = false;
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            updateActiveFilters();
+            setupSearchHandlers();
+        });
+
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        }
+
+        // Toggle user menu
+        function toggleUserMenu() {
+            const userMenu = document.getElementById('userMenu');
+            userMenu.classList.toggle('hidden');
+        }
+
+        // Toggle mobile filters
+        function toggleMobileFilters() {
+            const overlay = document.getElementById('mobileFilterOverlay');
+            overlay.classList.toggle('hidden');
+        }
+
+        // Set view (grid/list)
+        function setView(view) {
+            currentView = view;
+            const gridBtn = document.getElementById('gridViewBtn');
+            const listBtn = document.getElementById('listViewBtn');
+            const container = document.getElementById('questionsContainer');
+
+            if (view === 'grid') {
+                gridBtn.classList.add('bg-white', 'shadow-sm');
+                gridBtn.querySelector('svg').classList.remove('text-text-secondary');
+                gridBtn.querySelector('svg').classList.add('text-text-primary');
+                listBtn.classList.remove('bg-white', 'shadow-sm');
+                listBtn.querySelector('svg').classList.remove('text-text-primary');
+                listBtn.querySelector('svg').classList.add('text-text-secondary');
+                container.className = 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8';
+            } else {
+                listBtn.classList.add('bg-white', 'shadow-sm');
+                listBtn.querySelector('svg').classList.remove('text-text-secondary');
+                listBtn.querySelector('svg').classList.add('text-text-primary');
+                gridBtn.classList.remove('bg-white', 'shadow-sm');
+                gridBtn.querySelector('svg').classList.remove('text-text-primary');
+                gridBtn.querySelector('svg').classList.add('text-text-secondary');
+                container.className = 'space-y-4 mb-8';
+            }
+        }
+
+        // Toggle tag filter
+        function toggleTag(tag) {
+            const index = activeFilters.indexOf(tag);
+            if (index > -1) {
+                activeFilters.splice(index, 1);
+            } else {
+                activeFilters.push(tag);
+            }
+            updateActiveFilters();
+        }
+
+        // Remove filter
+        function removeFilter(filter) {
+            const index = activeFilters.indexOf(filter);
+            if (index > -1) {
+                activeFilters.splice(index, 1);
+            }
+            updateActiveFilters();
+        }
+
+        // Clear all filters
+        function clearAllFilters() {
+            activeFilters = [];
+            updateActiveFilters();
+            // Reset all checkboxes and radio buttons
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            document.querySelectorAll('input[type="radio"]').forEach(rb => rb.checked = false);
+            document.querySelector('input[name="dateRange"]').checked = true; // Reset to "All Time"
+        }
+
+        // Update active filters display
+        function updateActiveFilters() {
+            const container = document.getElementById('activeFilters');
+            const countBadge = document.getElementById('activeFiltersCount');
+            
+            if (activeFilters.length === 0) {
+                container.innerHTML = '';
+                countBadge.classList.add('hidden');
+                return;
+            }
+
+            countBadge.textContent = activeFilters.length;
+            countBadge.classList.remove('hidden');
+
+            const filtersHTML = activeFilters.map(filter => `
+                <div class="flex items-center space-x-2 bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-sm">
+                    <span>${filter}</span>
+                    <button onclick="removeFilter('${filter}')" class="hover:bg-primary-200 rounded-full p-1 transition-colors duration-200">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            `).join('');
+
+            container.innerHTML = `<div class="flex flex-wrap gap-2">${filtersHTML}</div>`;
+        }
+
+        // Setup search handlers
+        function setupSearchHandlers() {
+            const globalSearch = document.getElementById('globalSearch');
+            const questionSearch = document.getElementById('questionSearch');
+
+            if (globalSearch) {
+                globalSearch.addEventListener('input', debounce(handleGlobalSearch, 300));
+            }
+
+            if (questionSearch) {
+                questionSearch.addEventListener('input', debounce(handleQuestionSearch, 300));
+            }
+
+            // Sort change handler
+            const sortSelect = document.getElementById('sortSelect');
+            if (sortSelect) {
+                sortSelect.addEventListener('change', handleSortChange);
+            }
+        }
+
+        // Debounce function
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Handle global search
+        function handleGlobalSearch(event) {
+            const query = event.target.value;
+            console.log('Global search:', query);
+            // Implement search logic here
+        }
+
+        // Handle question search
+        function handleQuestionSearch(event) {
+            const query = event.target.value;
+            console.log('Question search:', query);
+            // Implement search logic here
+        }
+
+        // Handle sort change
+        function handleSortChange(event) {
+            currentSort = event.target.value;
+            console.log('Sort changed to:', currentSort);
+            // Implement sort logic here
+        }
+
+        // Load more questions
+        function loadMoreQuestions() {
+            if (isLoading) return;
+            
+            isLoading = true;
+            const button = event.target;
+            const originalText = button.textContent;
+            
+            button.textContent = 'Loading...';
+            button.disabled = true;
+
+            // Show skeleton loading
+            document.getElementById('loadingSkeleton').classList.remove('hidden');
+
+            // Simulate API call
+            setTimeout(() => {
+                // Hide skeleton
+                document.getElementById('loadingSkeleton').classList.add('hidden');
+                
+                // Reset button
+                button.textContent = originalText;
+                button.disabled = false;
+                isLoading = false;
+
+                // In a real app, append new questions to the container
+                console.log('Loaded more questions');
+            }, 1500);
+        }
+
+        // Apply filters (mobile)
+        function applyFilters() {
+            toggleMobileFilters();
+            // Apply the selected filters
+            console.log('Filters applied:', activeFilters);
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            const userMenu = document.getElementById('userMenu');
+            const userButton = event.target.closest('button');
+            
+            if (!userButton || !userButton.onclick || userButton.onclick.toString().indexOf('toggleUserMenu') === -1) {
+                userMenu.classList.add('hidden');
+            }
+        });
+
+        // Handle infinite scroll (alternative to load more button)
+        function setupInfiniteScroll() {
+            window.addEventListener('scroll', () => {
+                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1000) {
+                    if (!isLoading) {
+                        loadMoreQuestions();
+                    }
+                }
+            });
+        }
+
+        // Uncomment to enable infinite scroll
+        // setupInfiniteScroll();
+    </script>
+<script id="dhws-dataInjector" src="../public/dhws-data-injector.js"></script>
+</body>
+</html>
