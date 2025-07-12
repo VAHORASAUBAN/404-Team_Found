@@ -1,0 +1,44 @@
+{% for question in questions %}
+<article class="bg-surface rounded-2xl border border-border p-6 hover:shadow-md transition-all duration-200 card-elevation">
+    <div class="flex items-start justify-between">
+        <div class="flex-1">
+            <div class="flex items-center space-x-2 mb-2">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+                    {{ question.created_at|date:'M d, Y' }}
+                </span>
+            </div>
+            <h3 class="text-lg font-semibold text-text-primary mb-2 hover:text-primary-600 transition-colors duration-200">
+                <a href="{% url 'question_detail' %}">{{ question.title }}</a>
+            </h3>
+            <p class="text-text-secondary text-sm mb-4 line-clamp-2">
+                {{ question.description|safe|truncatechars:200 }}
+            </p>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4 text-sm text-text-secondary">
+                    <div class="flex items-center space-x-1">
+                        <img class="w-6 h-6 rounded-full object-cover" src="{% if question.user.profile_image %}{{ question.user.profile_image.url }}{% else %}https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D{% endif %}" alt="Author" />
+                        <span>{{ question.user.username }}</span>
+                    </div>
+                    <span>•</span>
+                    <span>{{ question.created_at|timesince }} ago</span>
+                </div>
+                <div class="flex items-center space-x-4 text-sm">
+                    <div class="flex items-center space-x-1 text-success-600">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>{{ question.answers.count }} answers</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-wrap gap-2 mt-4">
+                {% for tag in question.tags.all %}
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">{{ tag.name }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</article>
+{% empty %}
+<div class="text-center text-text-secondary py-8">No questions found.</div>
+{% endfor %}
