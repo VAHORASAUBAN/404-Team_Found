@@ -4,7 +4,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-{% load static %}
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -43,21 +42,18 @@
                         <input type="text" id="globalSearch" class="block w-full pl-10 pr-3 py-2 border border-border rounded-2xl leading-5 bg-surface placeholder-text-secondary focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200" placeholder="Search questions, tags, or users..." autocomplete="off" />
                         <!-- Search Suggestions Dropdown -->
                         <div id="searchSuggestions" class="absolute top-full left-0 right-0 bg-surface border border-border rounded-2xl shadow-lg mt-1 hidden z-50">
-                            <div class="p-2">
+                            {% comment %} <div class="p-2">
                                 <div class="text-xs text-text-secondary px-3 py-2 font-medium">Recent Searches</div>
-                                <a href="{% url 'question_detail' %}
-" class="block px-3 py-2 text-sm text-text-primary hover:bg-gray-50 rounded-lg transition-colors duration-200">
+                                <a href="{% url 'question_detail_default' %}" class="block px-3 py-2 text-sm text-text-primary hover:bg-gray-50 rounded-lg transition-colors duration-200">
                                     How to implement JWT authentication in Node.js?
                                 </a>
-                                <a href="{% url 'question_detail' %}
-" class="block px-3 py-2 text-sm text-text-primary hover:bg-gray-50 rounded-lg transition-colors duration-200">
+                                <a href="{% url 'question_detail_default' %}" class="block px-3 py-2 text-sm text-text-primary hover:bg-gray-50 rounded-lg transition-colors duration-200">
                                     React hooks vs class components
                                 </a>
-                                <a href="{% url 'question_detail' %}
-" class="block px-3 py-2 text-sm text-text-primary hover:bg-gray-50 rounded-lg transition-colors duration-200">
+                                <a href="{% url 'question_detail_default' %}" class="block px-3 py-2 text-sm text-text-primary hover:bg-gray-50 rounded-lg transition-colors duration-200">
                                     Docker container optimization
                                 </a>
-                            </div>
+                            </div> {% endcomment %}
                         </div>
                     </div>
                 </div>
@@ -82,7 +78,7 @@
                     <div class="relative">
                         <button id="userMenuButton" class="flex items-center space-x-2 p-2 rounded-2xl hover:bg-gray-50 transition-colors duration-200">
                             <img class="w-8 h-8 rounded-full object-cover" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User avatar" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
-                            <span class="hidden sm:block text-sm font-medium text-text-primary">Demo User</span>
+                            <span class="hidden sm:block text-sm font-medium text-text-primary">{{ user.get_full_name|default:user.username }}</span>
                             <svg class="w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                             </svg>
@@ -91,8 +87,7 @@
                         <!-- User Dropdown -->
                         <div id="userDropdown" class="absolute right-0 mt-2 w-48 bg-surface rounded-2xl shadow-lg border border-border hidden z-50">
                             <div class="py-1">
-                                <a href="{% url 'user_profile' %}
-" class="flex items-center px-4 py-2 text-sm text-text-primary hover:bg-gray-50 transition-colors duration-200">
+                                <a href="{% url 'user_profile' %}" class="flex items-center px-4 py-2 text-sm text-text-primary hover:bg-gray-50 transition-colors duration-200">
                                     <svg class="w-4 h-4 mr-3 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                     </svg>
@@ -100,7 +95,7 @@
                                 </a>
                                
                                 <div class="border-t border-border my-1"></div>
-                                <a href="{% url 'login' %}" class="flex items-center px-4 py-2 text-sm text-error-600 hover:bg-error-50 transition-colors duration-200">
+                                <a href="{% url 'logout' %}" class="flex items-center px-4 py-2 text-sm text-error-600 hover:bg-error-50 transition-colors duration-200">
                                     <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                                     </svg>
@@ -156,6 +151,17 @@
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+        <!-- Display Messages -->
+        {% if messages %}
+            <div class="mb-6">
+                {% for message in messages %}
+                    <div class="{% if message.tags == 'error' %}bg-red-100 border border-red-400 text-red-700{% elif message.tags == 'success' %}bg-green-100 border border-green-400 text-green-700{% else %}bg-blue-100 border border-blue-400 text-blue-700{% endif %} px-4 py-3 rounded-lg mb-2" role="alert">
+                        <span class="block sm:inline">{{ message }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
             <!-- Main Form Area -->
             <div class="lg:col-span-3">
@@ -167,7 +173,8 @@
                 </div>
 
                 <!-- Question Form -->
-                <form id="questionForm" class="space-y-6" onsubmit="handleQuestionSubmit(event)">
+                <form id="questionForm" method="POST" action="{% url 'ask_question' %}" class="space-y-6" onsubmit="handleQuestionSubmit(event)">
+                    {% csrf_token %}
                     <!-- Title Field -->
                     <div class="bg-surface rounded-2xl border border-border p-6">
                         <label for="questionTitle" class="block text-sm font-semibold text-text-primary mb-3">
@@ -339,6 +346,9 @@
                         <div class="text-xs text-text-secondary mt-2">
                             Press Enter or click to add tags. Popular tags: javascript, python, react, node.js, css
                         </div>
+                        
+                        <!-- Hidden input for form submission -->
+                        <input type="hidden" id="tagsHidden" name="tags" value="" />
                     </div>
 
                     <!-- Tone Adjustment -->
@@ -512,7 +522,7 @@
                 <div>
                     <h3 class="text-sm font-semibold text-text-primary mb-4">Platform</h3>
                     <ul class="space-y-2">
-                        <li><a href="browse_questions.html"
+                        <li><a href="{% url 'browse_questions' %}"
                                 class="text-sm text-text-secondary hover:text-primary-600 transition-colors duration-200">Browse
                                 Questions</a></li>
                         <li><a href="{% url 'ask_question' %}"
@@ -563,7 +573,9 @@
         let aiSuggestionText = '';
 
         // Popular tags for suggestions
+        const djangoTags = {{ popular_tags_json|safe }};
         const popularTags = [
+            ...djangoTags,
             'javascript', 'python', 'react', 'node.js', 'css', 'html', 'java', 'typescript',
             'angular', 'vue.js', 'php', 'c#', 'c++', 'sql', 'mongodb', 'express',
             'django', 'flask', 'spring', 'laravel', 'bootstrap', 'tailwind', 'git',
@@ -571,23 +583,7 @@
         ];
 
         // Mock similar questions data
-        const mockSimilarQuestions = [
-            {
-                title: "How to handle authentication in React applications?",
-                similarity: 85,
-                url: "{% url 'question_detail' %}"
-            },
-            {
-                title: "JWT token implementation best practices",
-                similarity: 78,
-                url: "{% url 'question_detail' %}"
-            },
-            {
-                title: "React Router authentication guards",
-                similarity: 72,
-                url: "{% url 'question_detail' %}"
-            }
-        ];
+        
 
         // Initialize page
         document.addEventListener('DOMContentLoaded', function () {
@@ -803,6 +799,7 @@
         // Update selected tags display
         function updateSelectedTags() {
             const container = document.getElementById('selectedTags');
+            const hiddenInput = document.getElementById('tagsHidden');
 
             container.innerHTML = selectedTags.map(tag => `
                 <span class="inline-flex items-center px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm">
@@ -818,6 +815,9 @@
                     </button>
                 </span>
             `).join('');
+            
+            // Update hidden input for form submission
+            hiddenInput.value = selectedTags.join(',');
         }
 
         // Toggle preview mode
@@ -1028,14 +1028,9 @@ Code block
             submitButton.classList.add('hidden');
             spinner.classList.remove('hidden');
 
-            // Simulate form submission
-            setTimeout(() => {
-                // Clear draft
-                localStorage.removeItem('questionDraft');
-
-                // Redirect to question detail page
-                window.location.href = '{% url "question_detail" %}';
-            }, 2000);
+            // Submit the form via Django
+            const form = document.getElementById('questionForm');
+            form.submit();
         }
 
         // Trigger AI improvement on title change
@@ -1048,7 +1043,6 @@ Code block
             }
         });
     </script>
-    <script id="dhws-dataInjector" src="../public/dhws-data-injector.js"></script>
 </body>
 
 </html>
