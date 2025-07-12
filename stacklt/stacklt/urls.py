@@ -5,6 +5,7 @@ from core import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.login_register, name='login'),
+    path('logout/', views.user_logout, name='logout'),
     path('ask_question/', views.ask_question, name='ask_question'),
     path('browse_questions/', views.browse_questions, name='browse_questions'),
     path('dashboard_home/', views.dashboard_home, name='dashboard_home'),

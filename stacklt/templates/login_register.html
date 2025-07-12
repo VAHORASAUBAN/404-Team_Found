@@ -63,7 +63,19 @@
                         <p class="text-text-secondary mt-2">Sign in to your account to continue</p>
                     </div>
 
-                    <form class="space-y-4" onsubmit="handleLogin(event)">
+                    <!-- Display Messages -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} bg-{% if message.tags == 'error' %}red{% else %}green{% endif %}-100 border border-{% if message.tags == 'error' %}red{% else %}green{% endif %}-400 text-{% if message.tags == 'error' %}red{% else %}green{% endif %}-700 px-4 py-3 rounded relative mb-4">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form class="space-y-4" method="post" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="login">
+                        
                         <!-- Email/Username Field -->
                         <div>
                             <label for="loginEmail" class="block text-sm font-medium text-text-primary mb-2">Email or Username</label>
@@ -135,7 +147,10 @@
                         <p class="text-text-secondary mt-2">Join our community of developers</p>
                     </div>
 
-                    <form class="space-y-4" onsubmit="handleRegister(event)">
+                    <form class="space-y-4" method="post" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="register">
+                        
                         <!-- Username Field -->
                         <div>
                             <label for="registerUsername" class="block text-sm font-medium text-text-primary mb-2">Username</label>
@@ -148,6 +163,76 @@
                             <label for="registerEmail" class="block text-sm font-medium text-text-primary mb-2">Email</label>
                             <input type="email" id="registerEmail" name="email" class="w-full px-4 py-3 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200" placeholder="Enter your email" required />
                             <div id="registerEmailError" class="text-error-500 text-sm mt-1 hidden"></div>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div>
+                            <label for="registerPassword" class="block text-sm font-medium text-text-primary mb-2">Password</label>
+                            <div class="relative">
+                                <input type="password" id="registerPassword" name="password" class="w-full px-4 py-3 pr-12 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200" placeholder="Create a password" required />
+                                <button type="button" onclick="togglePasswordVisibility('registerPassword', 'registerPasswordToggle')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-text-secondary hover:text-text-primary transition-colors duration-200">
+                                    <svg id="registerPasswordToggle" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div id="registerPasswordError" class="text-error-500 text-sm mt-1 hidden"></div>
+                        </div>
+
+                        <!-- Confirm Password Field -->
+                        <div>
+                            <label for="confirmPassword" class="block text-sm font-medium text-text-primary mb-2">Confirm Password</label>
+                            <div class="relative">
+                                <input type="password" id="confirmPassword" name="confirmPassword" class="w-full px-4 py-3 pr-12 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200" placeholder="Confirm your password" required />
+                                <button type="button" onclick="togglePasswordVisibility('confirmPassword', 'confirmPasswordToggle')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-text-secondary hover:text-text-primary transition-colors duration-200">
+                                    <svg id="confirmPasswordToggle" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div id="confirmPasswordError" class="text-error-500 text-sm mt-1 hidden"></div>
+                        </div>
+
+                        <!-- Terms Acceptance -->
+                        <div class="flex items-start">
+                            <input type="checkbox" id="termsAcceptance" class="w-4 h-4 text-primary-600 border-border rounded focus:ring-primary-500 mt-1" required />
+                            <label for="termsAcceptance" class="ml-2 text-sm text-text-secondary">
+                                I agree to the <a href="javascript:void(0)" class="text-primary-600 hover:text-primary-700">Terms of Service</a> and <a href="javascript:void(0)" class="text-primary-600 hover:text-primary-700">Privacy Policy</a>
+                            </label>
+                        </div>
+
+                        <!-- Sign Up Button -->
+                        <button type="submit" class="w-full bg-primary-600 text-white py-3 px-4 rounded-2xl font-medium hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all duration-200 hover:shadow-lg hover:shadow-primary-500/25">
+                            <span id="registerButtonText">Create Account</span>
+                            <div id="registerSpinner" class="hidden inline-flex items-center">
+                                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                                </svg>
+                                Creating account...
+                            </div>
+                        </button>
+
+                        <!-- Social Authentication -->
+                        <div class="relative">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="w-full border-t border-border"></div>
+                            </div>
+                            <div class="relative flex justify-center text-sm">
+                                <span class="px-2 bg-surface text-text-secondary">Or continue with</span>
+                            </div>
+                        </div>
+
+                        <button type="button" onclick="handleGitHubAuth()" class="w-full flex items-center justify-center px-4 py-3 border border-border rounded-2xl bg-surface text-text-primary hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200">
+                            <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd"/>
+                            </svg>
+                            Continue with GitHub
+                        </button>
+                    </form>
+                </div>
                         </div>
 
                         <!-- Password Field -->
@@ -363,130 +448,6 @@
         function hideError(elementId) {
             const errorElement = document.getElementById(elementId);
             errorElement.classList.add('hidden');
-        }
-
-        // Login form handler
-        function handleLogin(event) {
-            event.preventDefault();
-            
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            // Clear previous errors
-            hideError('loginEmailError');
-            hideError('loginPasswordError');
-            
-            let hasErrors = false;
-            
-            // Validate email
-            if (!email) {
-                showError('loginEmailError', 'Email or username is required');
-                hasErrors = true;
-            }
-            
-            // Validate password
-            if (!password) {
-                showError('loginPasswordError', 'Password is required');
-                hasErrors = true;
-            }
-            
-            if (hasErrors) return;
-            
-            // Show loading state
-            const buttonText = document.getElementById('loginButtonText');
-            const spinner = document.getElementById('loginSpinner');
-            buttonText.classList.add('hidden');
-            spinner.classList.remove('hidden');
-            
-            // Simulate API call
-            setTimeout(() => {
-                // Mock authentication - in real app, this would be an API call
-                if (email === 'a@gmail.com' && password === 'abrar9825') {
-                    // Success - redirect to dashboard
-                    localStorage.setItem('isAuthenticated', 'true');
-                    localStorage.setItem('user', JSON.stringify({
-                        email: email,
-                        username: 'demo_user',
-                        name: 'Demo User'
-                    }));
-                    window.location.href = '{%url "dashboard_home"%}';
-                } else {
-                    // Error
-                    showError('loginPasswordError', 'Invalid email or password');
-                    buttonText.classList.remove('hidden');
-                    spinner.classList.add('hidden');
-                }
-            }, 1500);
-        }
-
-        // Register form handler
-        function handleRegister(event) {
-            event.preventDefault();
-            
-            const username = document.getElementById('registerUsername').value;
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const termsAccepted = document.getElementById('termsAcceptance').checked;
-            
-            // Clear previous errors
-            hideError('registerUsernameError');
-            hideError('registerEmailError');
-            hideError('registerPasswordError');
-            hideError('confirmPasswordError');
-            
-            let hasErrors = false;
-            
-            // Validate username
-            if (!username || username.length < 3) {
-                showError('registerUsernameError', 'Username must be at least 3 characters');
-                hasErrors = true;
-            }
-            
-            // Validate email
-            if (!email || !validateEmail(email)) {
-                showError('registerEmailError', 'Please enter a valid email address');
-                hasErrors = true;
-            }
-            
-            // Validate password
-            if (!password || !validatePassword(password)) {
-                showError('registerPasswordError', 'Password must be at least 8 characters');
-                hasErrors = true;
-            }
-            
-            // Validate password confirmation
-            if (password !== confirmPassword) {
-                showError('confirmPasswordError', 'Passwords do not match');
-                hasErrors = true;
-            }
-            
-            // Validate terms acceptance
-            if (!termsAccepted) {
-                alert('Please accept the Terms of Service and Privacy Policy');
-                hasErrors = true;
-            }
-            
-            if (hasErrors) return;
-            
-            // Show loading state
-            const buttonText = document.getElementById('registerButtonText');
-            const spinner = document.getElementById('registerSpinner');
-            buttonText.classList.add('hidden');
-            spinner.classList.remove('hidden');
-            
-            // Simulate API call
-            setTimeout(() => {
-                // Mock registration - in real app, this would be an API call
-                // Success - redirect to dashboard
-                localStorage.setItem('isAuthenticated', 'true');
-                localStorage.setItem('user', JSON.stringify({
-                    email: email,
-                    username: username,
-                    name: username
-                }));
-                window.location.href = '{%url "dashboard_home"%}';
-            }, 2000);
         }
 
         // GitHub authentication handler
