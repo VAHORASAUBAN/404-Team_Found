@@ -58,7 +58,8 @@ ROOT_URLCONF = 'stacklt.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # <-- THIS LINE IS REQUIRED
+        # <-- THIS LINE IS REQUIRED
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -133,3 +134,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 CKEDITOR_UPLOAD_PATH = 'uploads/'
+
+# Authentication settings
+LOGIN_URL = '/'
+LOGIN_REDIRECT_URL = '/dashboard_home/'
+LOGOUT_REDIRECT_URL = '/'
