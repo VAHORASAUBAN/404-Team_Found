@@ -1,3 +1,4 @@
+
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -5,8 +6,32 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-import time
-from .models import User
+from .models import User, Question
+from django.template.loader import render_to_string
+from django.views.decorators.http import require_GET
+from django.db import models
+
+# AJAX endpoint for filtering questions
+@login_required
+@require_GET
+def questions_filter(request):
+    tab = request.GET.get('tab', 'trending')
+    if tab == 'newest':
+        questions = Question.objects.select_related('user').prefetch_related('tags').order_by('-created_at')
+    elif tab == 'unanswered':
+        questions = Question.objects.select_related('user').prefetch_related('tags').annotate(num_answers=models.Count('answers')).filter(num_answers=0).order_by('-created_at')
+    else:  # trending (for demo, just order by most answers)
+        questions = Question.objects.select_related('user').prefetch_related('tags').annotate(num_answers=models.Count('answers')).order_by('-num_answers', '-created_at')
+    html = render_to_string('partials/questions_grid.html', {'questions': questions}, request=request)
+    return JsonResponse({'html': html})
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from .models import User, Question
 
 # Create your views here.
 
@@ -287,4 +312,16 @@ def browse_questions(request):
 
 @login_required
 def dashboard_home(request):
-    return render(request, 'dashboard_home.html')
+    questions = Question.objects.select_related('user').prefetch_related('tags').order_by('-created_at')
+    user = request.user
+    questions_asked = Question.objects.filter(user=user).count()
+    from .models import Answer
+    answers_given = Answer.objects.filter(user=user).count() if hasattr(user, 'answer_set') or 'Answer' in globals() else 0
+    # For demo, use static values for reputation and AI assists
+    stats = {
+        'questions_asked': questions_asked,
+        'answers_given': answers_given,
+        'reputation': 1247,
+        'ai_assists': 45,
+    }
+    return render(request, 'dashboard_home.html', {'questions': questions, 'stats': stats})
