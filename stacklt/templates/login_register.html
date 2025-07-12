@@ -1,7 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-{% load static %}
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,8 +10,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fstackit4494back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.5"></script>
 </head>
+
 <body class="bg-background min-h-screen">
     <!-- Header -->
     <header class="bg-surface border-b border-border sticky top-0 z-50 backdrop-blur-sm bg-white/95">
@@ -19,67 +19,90 @@
             <div class="flex justify-between items-center h-16">
                 <!-- Logo -->
                 <div class="flex items-center">
-                    <a href="{%url 'dashboard_home'%}" class="flex items-center space-x-2">
-                        <div class="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
+                    <a href="{% url 'dashboard_home' %}" class="flex items-center space-x-2">
+                        <div
+                            class="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
                             <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
                         <span class="text-xl font-bold text-text-primary">StackIt</span>
                     </a>
                 </div>
 
-                <!-- Language Selector -->
-                <div class="flex items-center space-x-4">
-                    <select class="text-sm border border-border rounded-lg px-3 py-1.5 bg-surface text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                        <option value="en">English</option>
-                        <option value="es">Español</option>
-                        <option value="fr">Français</option>
-                    </select>
+                <!-- Navigation -->
+                <nav class="hidden md:flex items-center space-x-6">
+                    <a href="{% url 'dashboard_home' %}"
+                        class="text-primary-600 font-medium hover:text-primary-700 transition-colors duration-200">Home</a>
+                    <a href="{% url 'browse_questions' %}"
+                        class="text-text-secondary hover:text-text-primary transition-colors duration-200">Questions</a>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuButton"
+                    class="md:hidden p-2 rounded-lg text-text-secondary hover:text-text-primary hover:bg-gray-50 transition-colors duration-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="md:hidden hidden border-t border-border">
+                <div class="px-2 pt-2 pb-3 space-y-1">
+                    <a href="{% url 'dashboard_home' %}"
+                        class="block px-3 py-2 text-base font-medium text-primary-600 bg-primary-50 rounded-lg">Home</a>
+                    <a href="{% url 'browse_questions' %}"
+                        class="block px-3 py-2 text-base font-medium text-text-secondary hover:text-text-primary hover:bg-gray-50 rounded-lg transition-colors duration-200">Questions</a>
                 </div>
             </div>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="flex-1 flex items-center justify-center px-4 py-12">
+    <main class="flex-1 flex items-center justify-center px-4 py-8 sm:py-12">
         <div class="w-full max-w-md">
             <!-- Authentication Card -->
             <div class="bg-surface rounded-2xl shadow-lg border border-border overflow-hidden">
                 <!-- Tab Navigation -->
                 <div class="flex border-b border-border">
-                    <button id="loginTab" class="flex-1 py-4 px-6 text-center font-medium text-primary-600 bg-primary-50 border-b-2 border-primary-500 transition-all duration-200">
+                    <button id="loginTab"
+                        class="flex-1 py-3 sm:py-4 px-4 sm:px-6 text-center font-medium text-primary-600 bg-primary-50 border-b-2 border-primary-500 transition-all duration-200 text-sm sm:text-base">
                         Sign In
                     </button>
-                    <button id="registerTab" class="flex-1 py-4 px-6 text-center font-medium text-text-secondary hover:text-text-primary transition-all duration-200">
+                    <button id="registerTab"
+                        class="flex-1 py-3 sm:py-4 px-4 sm:px-6 text-center font-medium text-text-secondary hover:text-text-primary transition-all duration-200 text-sm sm:text-base">
                         Sign Up
                     </button>
                 </div>
 
                 <!-- Login Form -->
-                <div id="loginForm" class="p-6 space-y-6">
+                <div id="loginForm" class="p-4 sm:p-6 space-y-4 sm:space-y-6">
                     <div class="text-center">
-                        <h2 class="text-2xl font-bold text-text-primary">Welcome back</h2>
-                        <p class="text-text-secondary mt-2">Sign in to your account to continue</p>
+                        <h2 class="text-xl sm:text-2xl font-bold text-text-primary">Welcome back</h2>
+                        <p class="text-text-secondary mt-2 text-sm sm:text-base">Sign in to your account to continue</p>
                     </div>
 
                     <!-- Display Messages -->
                     {% if messages %}
                         {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }} bg-{% if message.tags == 'error' %}red{% else %}green{% endif %}-100 border border-{% if message.tags == 'error' %}red{% else %}green{% endif %}-400 text-{% if message.tags == 'error' %}red{% else %}green{% endif %}-700 px-4 py-3 rounded relative mb-4">
+                            <div class="alert alert-{{ message.tags }} bg-{% if message.tags == 'error' %}red{% else %}green{% endif %}-100 border border-{% if message.tags == 'error' %}red{% else %}green{% endif %}-400 text-{% if message.tags == 'error' %}red{% else %}green{% endif %}-700 px-3 sm:px-4 py-2 sm:py-3 rounded relative mb-4 text-sm">
                                 {{ message }}
                             </div>
                         {% endfor %}
                     {% endif %}
 
-                    <form class="space-y-4" method="post" action="{% url 'login' %}">
+                    <form class="space-y-3 sm:space-y-4" method="post" action="{% url 'login' %}">
                         {% csrf_token %}
                         <input type="hidden" name="action" value="login">
                         
                         <!-- Email/Username Field -->
                         <div>
                             <label for="loginEmail" class="block text-sm font-medium text-text-primary mb-2">Email or Username</label>
-                            <input type="text" id="loginEmail" name="email" class="w-full px-4 py-3 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200" placeholder="Enter your email or username" required />
+                            <input type="text" id="loginEmail" name="email"
+                                class="w-full px-3 sm:px-4 py-2 sm:py-3 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                                placeholder="Enter your email or username" required />
                             <div id="loginEmailError" class="text-error-500 text-sm mt-1 hidden"></div>
                         </div>
 
@@ -87,11 +110,18 @@
                         <div>
                             <label for="loginPassword" class="block text-sm font-medium text-text-primary mb-2">Password</label>
                             <div class="relative">
-                                <input type="password" id="loginPassword" name="password" class="w-full px-4 py-3 pr-12 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200" placeholder="Enter your password" required />
-                                <button type="button" onclick="togglePasswordVisibility('loginPassword', 'loginPasswordToggle')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-text-secondary hover:text-text-primary transition-colors duration-200">
-                                    <svg id="loginPasswordToggle" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                <input type="password" id="loginPassword" name="password"
+                                    class="w-full px-3 sm:px-4 py-2 sm:py-3 pr-10 sm:pr-12 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                                    placeholder="Enter your password" required />
+                                <button type="button"
+                                    onclick="togglePasswordVisibility('loginPassword', 'loginPasswordToggle')"
+                                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-text-secondary hover:text-text-primary transition-colors duration-200">
+                                    <svg id="loginPasswordToggle" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                     </svg>
                                 </button>
                             </div>
@@ -99,23 +129,29 @@
                         </div>
 
                         <!-- Remember Me & Forgot Password -->
-                        <div class="flex items-center justify-between">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
                             <label class="flex items-center">
-                                <input type="checkbox" class="w-4 h-4 text-primary-600 border-border rounded focus:ring-primary-500" />
+                                <input type="checkbox"
+                                    class="w-4 h-4 text-primary-600 border-border rounded focus:ring-primary-500" />
                                 <span class="ml-2 text-sm text-text-secondary">Remember me</span>
                             </label>
-                            <a href="javascript:void(0)" class="text-sm text-primary-600 hover:text-primary-700 transition-colors duration-200">
+                            <a href="javascript:void(0)"
+                                class="text-sm text-primary-600 hover:text-primary-700 transition-colors duration-200">
                                 Forgot password?
                             </a>
                         </div>
 
                         <!-- Sign In Button -->
-                        <button type="submit" class="w-full bg-primary-600 text-white py-3 px-4 rounded-2xl font-medium hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all duration-200 hover:shadow-lg hover:shadow-primary-500/25">
+                        <button type="submit"
+                            class="w-full bg-primary-600 text-white py-2 sm:py-3 px-4 rounded-2xl font-medium hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all duration-200 hover:shadow-lg hover:shadow-primary-500/25 text-sm sm:text-base">
                             <span id="loginButtonText">Sign In</span>
                             <div id="loginSpinner" class="hidden inline-flex items-center">
-                                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                                <svg class="animate-spin -ml-1 mr-3 h-4 w-4 sm:h-5 sm:w-5 text-white"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4" />
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                                 </svg>
                                 Signing in...
                             </div>
@@ -131,9 +167,12 @@
                             </div>
                         </div>
 
-                        <button type="button" onclick="handleGitHubAuth()" class="w-full flex items-center justify-center px-4 py-3 border border-border rounded-2xl bg-surface text-text-primary hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200">
-                            <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd"/>
+                        <button type="button" onclick="handleGitHubAuth()"
+                            class="w-full flex items-center justify-center px-3 sm:px-4 py-2 sm:py-3 border border-border rounded-2xl bg-surface text-text-primary hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 text-sm sm:text-base">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z"
+                                    clip-rule="evenodd" />
                             </svg>
                             Continue with GitHub
                         </button>
@@ -141,27 +180,31 @@
                 </div>
 
                 <!-- Register Form -->
-                <div id="registerForm" class="p-6 space-y-6 hidden">
+                <div id="registerForm" class="p-4 sm:p-6 space-y-4 sm:space-y-6 hidden">
                     <div class="text-center">
-                        <h2 class="text-2xl font-bold text-text-primary">Create account</h2>
-                        <p class="text-text-secondary mt-2">Join our community of developers</p>
+                        <h2 class="text-xl sm:text-2xl font-bold text-text-primary">Create account</h2>
+                        <p class="text-text-secondary mt-2 text-sm sm:text-base">Join our community of developers</p>
                     </div>
 
-                    <form class="space-y-4" method="post" action="{% url 'login' %}">
+                    <form class="space-y-3 sm:space-y-4" method="post" action="{% url 'login' %}">
                         {% csrf_token %}
                         <input type="hidden" name="action" value="register">
                         
                         <!-- Username Field -->
                         <div>
                             <label for="registerUsername" class="block text-sm font-medium text-text-primary mb-2">Username</label>
-                            <input type="text" id="registerUsername" name="username" class="w-full px-4 py-3 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200" placeholder="Choose a username" required />
+                            <input type="text" id="registerUsername" name="username"
+                                class="w-full px-3 sm:px-4 py-2 sm:py-3 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                                placeholder="Choose a username" required />
                             <div id="registerUsernameError" class="text-error-500 text-sm mt-1 hidden"></div>
                         </div>
 
                         <!-- Email Field -->
                         <div>
                             <label for="registerEmail" class="block text-sm font-medium text-text-primary mb-2">Email</label>
-                            <input type="email" id="registerEmail" name="email" class="w-full px-4 py-3 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200" placeholder="Enter your email" required />
+                            <input type="email" id="registerEmail" name="email"
+                                class="w-full px-3 sm:px-4 py-2 sm:py-3 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                                placeholder="Enter your email" required />
                             <div id="registerEmailError" class="text-error-500 text-sm mt-1 hidden"></div>
                         </div>
 
@@ -169,11 +212,18 @@
                         <div>
                             <label for="registerPassword" class="block text-sm font-medium text-text-primary mb-2">Password</label>
                             <div class="relative">
-                                <input type="password" id="registerPassword" name="password" class="w-full px-4 py-3 pr-12 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200" placeholder="Create a password" required />
-                                <button type="button" onclick="togglePasswordVisibility('registerPassword', 'registerPasswordToggle')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-text-secondary hover:text-text-primary transition-colors duration-200">
-                                    <svg id="registerPasswordToggle" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                <input type="password" id="registerPassword" name="password"
+                                    class="w-full px-3 sm:px-4 py-2 sm:py-3 pr-10 sm:pr-12 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                                    placeholder="Create a password" required />
+                                <button type="button"
+                                    onclick="togglePasswordVisibility('registerPassword', 'registerPasswordToggle')"
+                                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-text-secondary hover:text-text-primary transition-colors duration-200">
+                                    <svg id="registerPasswordToggle" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                     </svg>
                                 </button>
                             </div>
@@ -184,11 +234,18 @@
                         <div>
                             <label for="confirmPassword" class="block text-sm font-medium text-text-primary mb-2">Confirm Password</label>
                             <div class="relative">
-                                <input type="password" id="confirmPassword" name="confirmPassword" class="w-full px-4 py-3 pr-12 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200" placeholder="Confirm your password" required />
-                                <button type="button" onclick="togglePasswordVisibility('confirmPassword', 'confirmPasswordToggle')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-text-secondary hover:text-text-primary transition-colors duration-200">
-                                    <svg id="confirmPasswordToggle" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                <input type="password" id="confirmPassword" name="confirmPassword"
+                                    class="w-full px-3 sm:px-4 py-2 sm:py-3 pr-10 sm:pr-12 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                                    placeholder="Confirm your password" required />
+                                <button type="button"
+                                    onclick="togglePasswordVisibility('confirmPassword', 'confirmPasswordToggle')"
+                                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-text-secondary hover:text-text-primary transition-colors duration-200">
+                                    <svg id="confirmPasswordToggle" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                     </svg>
                                 </button>
                             </div>
@@ -197,19 +254,28 @@
 
                         <!-- Terms Acceptance -->
                         <div class="flex items-start">
-                            <input type="checkbox" id="termsAcceptance" class="w-4 h-4 text-primary-600 border-border rounded focus:ring-primary-500 mt-1" required />
+                            <input type="checkbox" id="termsAcceptance"
+                                class="w-4 h-4 text-primary-600 border-border rounded focus:ring-primary-500 mt-1"
+                                required />
                             <label for="termsAcceptance" class="ml-2 text-sm text-text-secondary">
-                                I agree to the <a href="javascript:void(0)" class="text-primary-600 hover:text-primary-700">Terms of Service</a> and <a href="javascript:void(0)" class="text-primary-600 hover:text-primary-700">Privacy Policy</a>
+                                I agree to the <a href="javascript:void(0)"
+                                    class="text-primary-600 hover:text-primary-700">Terms of Service</a> and <a
+                                    href="javascript:void(0)" class="text-primary-600 hover:text-primary-700">Privacy
+                                    Policy</a>
                             </label>
                         </div>
 
                         <!-- Sign Up Button -->
-                        <button type="submit" class="w-full bg-primary-600 text-white py-3 px-4 rounded-2xl font-medium hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all duration-200 hover:shadow-lg hover:shadow-primary-500/25">
+                        <button type="submit"
+                            class="w-full bg-primary-600 text-white py-2 sm:py-3 px-4 rounded-2xl font-medium hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all duration-200 hover:shadow-lg hover:shadow-primary-500/25 text-sm sm:text-base">
                             <span id="registerButtonText">Create Account</span>
                             <div id="registerSpinner" class="hidden inline-flex items-center">
-                                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                                <svg class="animate-spin -ml-1 mr-3 h-4 w-4 sm:h-5 sm:w-5 text-white"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4" />
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                                 </svg>
                                 Creating account...
                             </div>
@@ -225,79 +291,12 @@
                             </div>
                         </div>
 
-                        <button type="button" onclick="handleGitHubAuth()" class="w-full flex items-center justify-center px-4 py-3 border border-border rounded-2xl bg-surface text-text-primary hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200">
-                            <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd"/>
-                            </svg>
-                            Continue with GitHub
-                        </button>
-                    </form>
-                </div>
-                        </div>
-
-                        <!-- Password Field -->
-                        <div>
-                            <label for="registerPassword" class="block text-sm font-medium text-text-primary mb-2">Password</label>
-                            <div class="relative">
-                                <input type="password" id="registerPassword" name="password" class="w-full px-4 py-3 pr-12 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200" placeholder="Create a password" required />
-                                <button type="button" onclick="togglePasswordVisibility('registerPassword', 'registerPasswordToggle')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-text-secondary hover:text-text-primary transition-colors duration-200">
-                                    <svg id="registerPasswordToggle" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div id="registerPasswordError" class="text-error-500 text-sm mt-1 hidden"></div>
-                        </div>
-
-                        <!-- Confirm Password Field -->
-                        <div>
-                            <label for="confirmPassword" class="block text-sm font-medium text-text-primary mb-2">Confirm Password</label>
-                            <div class="relative">
-                                <input type="password" id="confirmPassword" name="confirmPassword" class="w-full px-4 py-3 pr-12 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200" placeholder="Confirm your password" required />
-                                <button type="button" onclick="togglePasswordVisibility('confirmPassword', 'confirmPasswordToggle')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-text-secondary hover:text-text-primary transition-colors duration-200">
-                                    <svg id="confirmPasswordToggle" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div id="confirmPasswordError" class="text-error-500 text-sm mt-1 hidden"></div>
-                        </div>
-
-                        <!-- Terms Acceptance -->
-                        <div class="flex items-start">
-                            <input type="checkbox" id="termsAcceptance" class="w-4 h-4 text-primary-600 border-border rounded focus:ring-primary-500 mt-1" required />
-                            <label for="termsAcceptance" class="ml-2 text-sm text-text-secondary">
-                                I agree to the <a href="javascript:void(0)" class="text-primary-600 hover:text-primary-700">Terms of Service</a> and <a href="javascript:void(0)" class="text-primary-600 hover:text-primary-700">Privacy Policy</a>
-                            </label>
-                        </div>
-
-                        <!-- Sign Up Button -->
-                        <button type="submit" class="w-full bg-primary-600 text-white py-3 px-4 rounded-2xl font-medium hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all duration-200 hover:shadow-lg hover:shadow-primary-500/25">
-                            <span id="registerButtonText">Create Account</span>
-                            <div id="registerSpinner" class="hidden inline-flex items-center">
-                                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
-                                </svg>
-                                Creating account...
-                            </div>
-                        </button>
-
-                        <!-- Social Authentication -->
-                        <div class="relative">
-                            <div class="absolute inset-0 flex items-center">
-                                <div class="w-full border-t border-border"></div>
-                            </div>
-                            <div class="relative flex justify-center text-sm">
-                                <span class="px-2 bg-surface text-text-secondary">Or continue with</span>
-                            </div>
-                        </div>
-
-                        <button type="button" onclick="handleGitHubAuth()" class="w-full flex items-center justify-center px-4 py-3 border border-border rounded-2xl bg-surface text-text-primary hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200">
-                            <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd"/>
+                        <button type="button" onclick="handleGitHubAuth()"
+                            class="w-full flex items-center justify-center px-3 sm:px-4 py-2 sm:py-3 border border-border rounded-2xl bg-surface text-text-primary hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 text-sm sm:text-base">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z"
+                                    clip-rule="evenodd" />
                             </svg>
                             Continue with GitHub
                         </button>
@@ -306,9 +305,10 @@
             </div>
 
             <!-- Additional Links -->
-            <div class="mt-6 text-center">
+            <div class="mt-4 sm:mt-6 text-center">
                 <p class="text-sm text-text-secondary">
-                    Need help? <a href="javascript:void(0)" class="text-primary-600 hover:text-primary-700 transition-colors duration-200">Contact Support</a>
+                    Need help? <a href="javascript:void(0)"
+                        class="text-primary-600 hover:text-primary-700 transition-colors duration-200">Contact Support</a>
                 </p>
             </div>
         </div>
@@ -316,43 +316,32 @@
 
     <!-- Footer -->
     <footer class="bg-surface border-t border-border mt-auto">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
                 <!-- Company Info -->
-                <div class="col-span-1 md:col-span-2">
+                <div class="md:col-span-1">
                     <div class="flex items-center space-x-2 mb-4">
-                        <div class="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
+                        <div
+                            class="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
                             <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
                         <span class="text-xl font-bold text-text-primary">StackIt</span>
                     </div>
                     <p class="text-text-secondary text-sm mb-4">
-                        AI-powered Q&A platform for developers. Get instant answers, share knowledge, and build your reputation in the tech community.
+                        AI-powered Q&A platform for developers.
                     </p>
-                    <div class="flex space-x-4">
-                        <a href="javascript:void(0)" class="text-text-secondary hover:text-primary-600 transition-colors duration-200">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd"/>
-                            </svg>
-                        </a>
-                        <a href="javascript:void(0)" class="text-text-secondary hover:text-primary-600 transition-colors duration-200">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84"/>
-                            </svg>
-                        </a>
-                    </div>
                 </div>
 
                 <!-- Quick Links -->
                 <div>
                     <h3 class="text-sm font-semibold text-text-primary mb-4">Platform</h3>
                     <ul class="space-y-2">
-                        <li><a href="browse_questions.html" class="text-sm text-text-secondary hover:text-primary-600 transition-colors duration-200">Browse Questions</a></li>
-                        <li><a href="ask_question.html" class="text-sm text-text-secondary hover:text-primary-600 transition-colors duration-200">Ask Question</a></li>
-                        <li><a href="javascript:void(0)" class="text-sm text-text-secondary hover:text-primary-600 transition-colors duration-200">Tags</a></li>
-                        <li><a href="javascript:void(0)" class="text-sm text-text-secondary hover:text-primary-600 transition-colors duration-200">Users</a></li>
+                        <li><a href="{% url 'browse_questions' %}"
+                                class="text-sm text-text-secondary hover:text-primary-600 transition-colors duration-200">Browse Questions</a></li>
+                        <li><a href="{% url 'ask_question' %}"
+                                class="text-sm text-text-secondary hover:text-primary-600 transition-colors duration-200">Ask Question</a></li>
                     </ul>
                 </div>
 
@@ -360,15 +349,15 @@
                 <div>
                     <h3 class="text-sm font-semibold text-text-primary mb-4">Support</h3>
                     <ul class="space-y-2">
-                        <li><a href="javascript:void(0)" class="text-sm text-text-secondary hover:text-primary-600 transition-colors duration-200">Help Center</a></li>
-                        <li><a href="javascript:void(0)" class="text-sm text-text-secondary hover:text-primary-600 transition-colors duration-200">Contact Us</a></li>
-                        <li><a href="javascript:void(0)" class="text-sm text-text-secondary hover:text-primary-600 transition-colors duration-200">Privacy Policy</a></li>
-                        <li><a href="javascript:void(0)" class="text-sm text-text-secondary hover:text-primary-600 transition-colors duration-200">Terms of Service</a></li>
+                        <li><a href="javascript:void(0)"
+                                class="text-sm text-text-secondary hover:text-primary-600 transition-colors duration-200">Help Center</a></li>
+                        <li><a href="javascript:void(0)"
+                                class="text-sm text-text-secondary hover:text-primary-600 transition-colors duration-200">Contact Us</a></li>
                     </ul>
                 </div>
             </div>
 
-            <div class="border-t border-border mt-8 pt-8 text-center">
+            <div class="border-t border-border mt-6 sm:mt-8 pt-6 sm:pt-8 text-center">
                 <p class="text-sm text-text-secondary">
                     © 2025 StackIt. All rights reserved.
                 </p>
@@ -378,6 +367,14 @@
 
     <!-- JavaScript -->
     <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
         // Tab switching functionality
         const loginTab = document.getElementById('loginTab');
         const registerTab = document.getElementById('registerTab');
@@ -414,7 +411,7 @@
         function togglePasswordVisibility(inputId, iconId) {
             const input = document.getElementById(inputId);
             const icon = document.getElementById(iconId);
-            
+
             if (input.type === 'password') {
                 input.type = 'text';
                 icon.innerHTML = `
@@ -452,39 +449,48 @@
 
         // GitHub authentication handler
         function handleGitHubAuth() {
-            // In a real app, this would redirect to GitHub OAuth
             alert('GitHub authentication would be implemented here');
         }
 
         // Real-time validation
-        document.getElementById('registerEmail').addEventListener('blur', function() {
-            const email = this.value;
-            if (email && !validateEmail(email)) {
-                showError('registerEmailError', 'Please enter a valid email address');
-            } else {
-                hideError('registerEmailError');
-            }
-        });
+        const registerEmail = document.getElementById('registerEmail');
+        const registerPassword = document.getElementById('registerPassword');
+        const confirmPassword = document.getElementById('confirmPassword');
 
-        document.getElementById('registerPassword').addEventListener('blur', function() {
-            const password = this.value;
-            if (password && !validatePassword(password)) {
-                showError('registerPasswordError', 'Password must be at least 8 characters');
-            } else {
-                hideError('registerPasswordError');
-            }
-        });
+        if (registerEmail) {
+            registerEmail.addEventListener('blur', function () {
+                const email = this.value;
+                if (email && !validateEmail(email)) {
+                    showError('registerEmailError', 'Please enter a valid email address');
+                } else {
+                    hideError('registerEmailError');
+                }
+            });
+        }
 
-        document.getElementById('confirmPassword').addEventListener('blur', function() {
-            const password = document.getElementById('registerPassword').value;
-            const confirmPassword = this.value;
-            if (confirmPassword && password !== confirmPassword) {
-                showError('confirmPasswordError', 'Passwords do not match');
-            } else {
-                hideError('confirmPasswordError');
-            }
-        });
+        if (registerPassword) {
+            registerPassword.addEventListener('blur', function () {
+                const password = this.value;
+                if (password && !validatePassword(password)) {
+                    showError('registerPasswordError', 'Password must be at least 8 characters');
+                } else {
+                    hideError('registerPasswordError');
+                }
+            });
+        }
+
+        if (confirmPassword) {
+            confirmPassword.addEventListener('blur', function () {
+                const password = document.getElementById('registerPassword').value;
+                const confirmPasswordValue = this.value;
+                if (confirmPasswordValue && password !== confirmPasswordValue) {
+                    showError('confirmPasswordError', 'Passwords do not match');
+                } else {
+                    hideError('confirmPasswordError');
+                }
+            });
+        }
     </script>
-<script id="dhws-dataInjector" src="../public/dhws-data-injector.js"></script>
 </body>
+
 </html>
