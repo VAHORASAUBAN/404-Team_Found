@@ -1,0 +1,76 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django stuff:
+*.log
+*.pot
+*.pyc
+db.sqlite3
+media/
+staticfiles/
+static/
+local_settings.py
+.env
+*.sqlite3
+
+# If your project uses Postgres or MySQL, you may want to ignore their data files too.
+*.db
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/
+
+# PyCharm
+.idea/
+
+# pipenv
+Pipfile.lock
+
+# macOS
+*.DS_Store
+
+# node
+node_modules/
+
+# test coverage
+htmlcov/
+.coverage
+.tox/
+
+# Sentry
+.sentry/
+
+# migrations
+*/migrations/*.py
+*/migrations/*.pyc
+
+# Build
+build/
+dist/
+*.egg-info/
+.eggs/
+MANIFEST
+
+# Others
+*.swp
+*.swo
+
+# Docker
+*.pid
+*.seed
+*.bak
+
+# Ignore compiled files
+*.so
+
+# Ignore yarn
+yarn.lock
+
+# Ignore package-lock
+package-lock.json
+venv/
